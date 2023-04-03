@@ -30,11 +30,11 @@ func createbook(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getbook(w http.ResponseWriter, r *http.Request) {
+func getbooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
 }
-func getbooks(w http.ResponseWriter, r *http.Request) {
+func getbook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	parms := mux.Vars(r)
 	for _, item := range books {
