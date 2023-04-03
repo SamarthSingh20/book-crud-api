@@ -34,6 +34,7 @@ func getbooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
 }
+
 func getbook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	parms := mux.Vars(r)
@@ -45,6 +46,19 @@ func getbook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func updatebook(w http.ResponseWriter, r *http.Request){
+    w.Header().Set("Content-Type", "application/json")
+    parms := mux.Vars(r)
+	for index, item := range books {
+		if item.ID == parms["id"] {
+			books = append(books[:index], books[index+1:]...)
+            var book Book
+            json.NewDecoder(r.Body).Decode(&book)
+            books = append(books[:index], book)
+            json.NewEncoder(w).Encode(book)
+		}
+	}
+}
 
 func deletebook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -68,6 +82,7 @@ func main() {
 	r.HandleFunc("/books", getbooks).Methods("GET")
 	r.HandleFunc("/books/{id}", getbook).Methods("GET")
 	r.HandleFunc("/books/id", deletebook).Methods("DELETE")
+	r.HandleFunc("/update", updatebook).Methods("PUT")
 
 	http.ListenAndServe(":8000", r)
 
